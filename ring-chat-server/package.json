@@ -1,0 +1,22 @@
+{
+  "name": "ring-chat-server",
+  "version": "0.0.1",
+  "description": "a mock server for ring-chat-client",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node ./app.js"
+  },
+  "keywords": [
+    "ring-chat",
+    "mock",
+    "server"
+  ],
+  "author": "wd_bailuo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0"
+  }
+}
