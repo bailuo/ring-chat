@@ -42,3 +42,7 @@ export interface ServerRes {
     data: any;
 }
 
+
+export interface SeverSystemRes {
+    message: string;
+}

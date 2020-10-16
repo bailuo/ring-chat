@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex, { ModuleTree } from 'vuex'
 import user from './modules/user';
-import chat from './modules/user';
+import chat from './modules/chat';
 import { UserState } from './modules/user/state';
 import { ChatState } from './modules/chat/state';
 

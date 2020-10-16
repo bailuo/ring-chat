@@ -30,7 +30,7 @@
     @Component({})
     export default class Login extends Vue {
         @userModule.Action('login') login: Function;
-
+        
         loginForm = {
             username: '',
             password: '',

@@ -8,7 +8,7 @@ import { RootState } from '../../index';
 
 const actions: ActionTree<UserState, RootState> = {
     async login({ commit }, payload) {
-        const res = await Ajax({url:'/api/login', method: 'GET',params: payload })
+        const res = await Ajax({url:'/api/login', method: 'POST',data: payload })
         res && commit(SET_USER_TOKEN, Math.random()* 1000);
         return res;
     },

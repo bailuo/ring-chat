@@ -1,41 +1,24 @@
 
 import { UserMessage} from './types';
+import { User} from '@/store/modules/user/types';
 export interface ChatState  {
+    // 当前对话，如果有时间做对话切换
     currentRoom: string;
+    // 对话窗口列表
     rooms: Array<string>;
+    // 消息列表
     messages: Array<UserMessage>;
+    // 当前聊天的人
+    participants: Array<User>;
+    // 当前聊天使用的socket
+    chatSocket?: SocketIOClient.Socket;
 }
 const chatState: ChatState = {
     currentRoom : '',
     rooms:[],
-    messages: []
+    messages: [],
+    participants:[],
+    chatSocket: undefined
 };
 
 export default chatState;
-
-// export interface ChatNode<T> {
-//     itemId: string;
-//     contentType: string;
-//     content: T;
-//     nextItem: ChatNode<T>;
-// }
-
-
-// export interface Chat<K> {
-//     roomId: string;
-//     chats: Array<ChatNode<K>>;
-// }
-
-
-// export class StringChartNode implements ChatNode<string> {
-//     itemId: string;
-//     contentType = 'string';
-//     content: string;
-//     nextItem: any;
-
-//     constructor(content: string){
-//         this.itemId = dayjs().valueOf().toString();
-//         this.content = content;
-//         this.nextItem = null;
-//     }
-// }

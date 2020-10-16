@@ -33,6 +33,11 @@ export interface ServerRes {
 }
 
 
+export interface SeverSystemRes {
+    message: string;
+}
+
+
 
 
 
