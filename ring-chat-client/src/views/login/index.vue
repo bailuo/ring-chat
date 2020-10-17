@@ -30,21 +30,19 @@
     @Component({})
     export default class Login extends Vue {
         @userModule.Action('login') login: Function;
-        
+
         loginForm = {
             username: '',
             password: '',
         };
 
         async handleLogin() {
-            this.login(this.loginForm).then(
-                () => {
-                    this.$router.push('/chat');
-                },
-                () => {
-                  console.log('Login Failed');
-                }
-            );
+            const loginResult = await this.login(this.loginForm);
+            if (loginResult) {
+                this.$router.push('/chat');
+                return true;
+            }
+            return false;
         }
     }
 </script>

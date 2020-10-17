@@ -3,8 +3,11 @@ const path = require('path');
 const IO = require('socket.io');
 const app = express();
 const server = require('http').Server(app);
+const bodyParser = require('body-parser');
 const socketIO = IO(server);
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // status 0 暂时无人使用 1被占用
@@ -39,9 +42,10 @@ const allowCrossDomain = function (req, res, next) {
 app.use(allowCrossDomain);
 
 app.post('/api/login', (req, res) => {
+    const form = req.body;
     res.send({
         code: 0,
-        message: 'login action success',
+        message: `${form.username} login action succeeded`,
         data: {},
     });
 });
@@ -85,11 +89,11 @@ socketIO.on('connection', function (socket) {
             }
         });
     });
-    socket.on('message', function (message) {
+    socket.on('chatMessage', function (messageReuest) {
         console.log('Receive And Forward Message');
-        socket.emit('message', message);
+        socket.broadcast.emit('userChatMessage', messageReuest);
     });
-    socket.on('sysMessage', function (message) {
+    socket.broadcast.on('sysMessasge', function (message) {
         socket.emit('sysMessage', message);
     });
 });

@@ -7,8 +7,7 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
     {
-        path: '/',
-        name: 'Login',
+        path: '/login',
         component: Login,
     },
     {
@@ -23,8 +22,5 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
-// router.beforeEach(from, to, next) {
-
-// }
 
 export default router;

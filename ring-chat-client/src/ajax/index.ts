@@ -4,12 +4,13 @@ const instance = axios.create({
     baseURL: 'http://localhost:4000/',
     timeout: 5000,
     headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
     },
 });
 
 instance.interceptors.request.use(
     function(config: any) {
+        config.dataType =  config.dataType || 'json';
         return config;
     },
     function(error: any) {
