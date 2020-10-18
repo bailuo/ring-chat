@@ -5,6 +5,7 @@ const app = express();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const socketIO = IO(server);
+const dayjs = require('dayjs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -32,6 +33,21 @@ const nickNameLibrary = [
     { nickname: '安岛主', status: 0 },
 ];
 
+String.prototype.hash = function () {
+    var self = this,
+        range = Array(this.length);
+    for (var i = 0; i < this.length; i++) {
+        range[i] = i;
+    }
+    return Array.prototype.map
+        .call(range, function (i) {
+            return self.charCodeAt(i).toString(16);
+        })
+        .join('');
+};
+
+const userMap = new Map();
+
 const allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -41,12 +57,29 @@ const allowCrossDomain = function (req, res, next) {
 };
 app.use(allowCrossDomain);
 
+// 登录，计算uuid，并且给一个nickname
 app.post('/api/login', (req, res) => {
     const form = req.body;
+    const date = new Date();
+    const dateInTime = date.getTime().toString();
+    const userHash = (form.username + form.password + dateInTime).hash();
+    userMap[form.username] = userHash;
+    let nickname = '';
+    nickNameLibrary.some((_item) => {
+        if (!_item.status) {
+            _item.status = 1;
+            nickname = _item.nickname;
+            return true;
+        }
+    });
     res.send({
         code: 0,
         message: `${form.username} login action succeeded`,
-        data: {},
+        data: {
+            ...form,
+            nickname,
+            uuid: userHash,
+        },
     });
 });
 app.post('/api/inviteToChat', (req, res) => {
@@ -70,31 +103,66 @@ app.post('/api/inviteToChat', (req, res) => {
 });
 
 socketIO.on('connection', function (socket) {
-    socket.on('join', () => {
-        let nickname = '';
+    // 这个方法暂时用不到 后期做多窗口的时候会用到
+    socket.on('quit', function (user) {
         nickNameLibrary.some((_item) => {
-            if (!_item.status) {
-                _item.status = 1;
-                nickname = _item.nickname;
-                return true;
-            }
-        });
-        socket.emit('joinSuccess', { nickname });
-    });
-    socket.on('disconnect', function (nickname) {
-        nickNameLibrary.some((_item) => {
-            if ((_item.nickname = nickname)) {
+            if ((_item.nickname = user.nickname)) {
                 _item.status = 0;
                 return true;
             }
         });
+        delete userMap[user.username];
     });
-    socket.on('chatMessage', function (messageReuest) {
-        console.log('Receive And Forward Message');
-        socket.broadcast.emit('userChatMessage', messageReuest);
+    // 为了能够排序，我们为每条用户发送的信息做一个uuid，这个uuid目前最实际的一个场景是撤回信息的时候使用
+    socket.on('chatMessage', function (messageRequest) {
+        const { message } = messageRequest;
+        const date = new Date();
+        const dateInTime = date.getTime().toString();
+        let messageUUID;
+        if (message.type === 'text') {
+            messageUUID = (message.conent + dateInTime).hash();
+        } else {
+            messageUUID = dateInTime.hash();
+        }
+        const emitMessage = {
+            ...message,
+            timestamp: dayjs().format('YYYY-MM-DD hh:mm'),
+            messageId: messageUUID,
+        };
+        socket.broadcast.emit('userChatMessage', {
+            data: {
+                ...messageRequest,
+                message: emitMessage,
+            },
+        });
+        socket.emit('userChatMessage', {
+            code: 0,
+            data: {
+                ...messageRequest,
+                message: emitMessage,
+            },
+        });
     });
-    socket.broadcast.on('sysMessasge', function (message) {
-        socket.emit('sysMessage', message);
+    socket.on('withdrawMessage', function (withdrawRequest) {
+        const { user, messageId } = withdrawRequest;
+        const date = new Date();
+        const dateInTime = date.getTime().toString();
+        const sysMessageUUID = dateInTime.hash();
+        const withdrawData = {
+            messageId,
+            sysMessage: {
+                content: `"${user.nickname}"撤回了一条消息`,
+                messageId: sysMessageUUID,
+            },
+        };
+        socket.broadcast.emit('withdrawUserMessage', {
+            code: 0,
+            data: withdrawData,
+        });
+        socket.emit('withdrawUserMessage', {
+            code: 0,
+            data: withdrawData,
+        });
     });
 });
 

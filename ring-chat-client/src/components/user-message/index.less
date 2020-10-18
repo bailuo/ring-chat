@@ -7,20 +7,43 @@
     align-items: flex-start;
     justify-content: flex-start;
     .ring-chat-user-message__avatar-wrap .ring-chat-user-message__avatar {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         text-align: center;
-        line-height: 50px;
-        font-size: 14px;
+        line-height: 40px;
+        font-size: 16px;
         background-color: #0089cd;
         color: #fff;
+        border-radius: 100%;
+    }
+
+    .ring-chat-user-message__avatar-wrap.current-user-message
+        .ring-chat-user-message__avatar {
+        background-color: #459baa;
     }
     .ring-chat-user-message__main {
         flex: 1;
         text-align: left;
+        margin-left: 10px;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    .ring-chat-user-message__content {
+        font-size: 16px;
+        color: #333666;
     }
     .ring-chat-user-message__extra-info {
         text-align: left;
+        font-size: 12px;
+        color: #999;
+    }
+    .ring-chat-user-message__extra-info__cancel {
+        margin-left: 10px;
+        cursor: pointer;
+        color: #666;
     }
 }
 .ring-chat-compopnent.user-message.isFromCurrentClient {
@@ -30,5 +53,8 @@
     }
     .ring-chat-user-message__extra-info {
         text-align: right;
+    }
+    .ring-chat-user-message__main {
+        align-items: flex-end;
     }
 }

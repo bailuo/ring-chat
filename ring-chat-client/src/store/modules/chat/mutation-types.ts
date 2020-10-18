@@ -6,3 +6,5 @@ export const RESET_OR_INIT_CHAT = 'rest_or_init_chat';
 export const ADD_USER_TO_PARTICIPANTS = 'add_user_to_participants';
 
 export const SET_CHAT_SOCKET = 'set_chat_socket';
+
+export const CANCEL_ONE_CHAT_ITEM = 'cancel_one_chat_item';

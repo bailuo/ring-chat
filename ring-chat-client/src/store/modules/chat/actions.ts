@@ -4,7 +4,11 @@ import { ActionTree } from 'vuex';
 import { ChatState } from './state';
 import { RootState } from '../../index';
 import { ServerRes, SeverSystemRes } from './types';
-import { SET_CHAT_SOCKET} from './mutation-types';
+import {
+    ADD_MESSAGE_TO_LIST,    
+    SET_CHAT_SOCKET,
+    CANCEL_ONE_CHAT_ITEM
+} from './mutation-types';
 
 let socket: SocketIOClient.Socket;
 
@@ -26,11 +30,23 @@ const actions: ActionTree<ChatState, RootState> = {
             commit(SET_CHAT_SOCKET, socket);
         });
         socket.on('userChatMessage', async (res: ServerRes) => {
-            console.log(res)
+            const { user, message} = res.data;
+            const messageToAdd = {
+                ...message,
+                isFromClientUser:  username === user.username,
+                senderNickname: user.nickname
+            }
+            commit(ADD_MESSAGE_TO_LIST, messageToAdd);
+        })
+        socket.on('withdrawUserMessage', async (res: ServerRes) => {
+            const { messageId, sysMessage} = res.data;
+            sysMessage.isSysMessage = true;
+            commit(CANCEL_ONE_CHAT_ITEM, messageId);
+            commit(ADD_MESSAGE_TO_LIST, sysMessage);
         })
         socket.on('sysMessage', async (res: SeverSystemRes) => {
             const { message } = res;
-            console.log('ReceivedSysMessage', message);
+            commit(ADD_MESSAGE_TO_LIST, message);
         })
     },
     // 邀请新人加入，触发系统信息
@@ -47,6 +63,14 @@ const actions: ActionTree<ChatState, RootState> = {
             message: payload
         }
         socket.emit('chatMessage', messageEntity)
+    },
+    async withdrawUserMessage({rootState}, payload){
+        const { user } = rootState;
+        const messageEntity = {
+            user,
+            messageId: payload
+        }
+        socket.emit('withdrawMessage', messageEntity)
     }
 };
 

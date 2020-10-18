@@ -9,11 +9,13 @@ export interface Message {
 // 聊天的每条信息
 export interface UserTextMessage extends Message {
     content: string;
+    senderNickname: string;
 }
 
 
 export interface UserImageMessage extends Message {
     src: string;
+    senderNickname: string;
 }
 
 export type UserMessage = UserTextMessage | UserImageMessage;

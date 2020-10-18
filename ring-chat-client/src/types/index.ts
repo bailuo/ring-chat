@@ -1,4 +1,4 @@
-// 聊天的每条信息
+// 聊天的每条
 export interface ChatMessage<T> {
     messageId: string;
     contentType: string;
@@ -39,8 +39,9 @@ export interface SeverSystemRes {
 
 
 
-
-
-
-
+// 图片尺寸
+export interface  ImageSize {
+    width: number;
+    height: number;
+}
 

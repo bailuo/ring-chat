@@ -5,15 +5,18 @@
             ref="loginForm"
             label-width="100"
         >
+        <div class="ring-chat-form__items">
             <el-form-item label="用户名" class="ring-chat-form__item">
-                <el-input v-model="loginForm.username"></el-input>
+                <el-input v-model="loginForm.username" placeholder="请输入您的用户名"></el-input>
             </el-form-item>
             <el-form-item label="密码" class="ring-chat-form__item">
                 <el-input
                     v-model="loginForm.password"
                     type="password"
+                    placeholder="请输入您的密码"
                 ></el-input>
             </el-form-item>
+        </div>
             <el-form-item>
                 <el-button type="primary" @click="handleLogin">登录</el-button>
             </el-form-item>
@@ -46,9 +49,5 @@
         }
     }
 </script>
-<style lang="less">
-    .ring-chat-form {
-        width: 200px;
-        margin: 50px auto;
-    }
+<style lang="less" src="./index.less">
 </style>

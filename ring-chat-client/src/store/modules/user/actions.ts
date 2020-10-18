@@ -1,4 +1,5 @@
 import Ajax from '@/ajax';
+import Vue from 'vue';
 import { ActionTree } from 'vuex';
 import { SET_USER_TOKEN, INIT_USER } from './mutation-types';
 import { UserState } from './state';
@@ -14,14 +15,13 @@ const actions: ActionTree<UserState, RootState> = {
         if (!res || Number(res.code) !== 0) {
             return false;
         }
-
         commit(INIT_USER, {
-            userId: payload.username || '',
+            userId: res.data.uuid || '',
             username: payload.username,
-            nickname: '',
-            token: '',
+            nickname: res.data.nickname,
+            token: res.data.uuid,
         });
-
+        Vue.$cookies.set('uuid',res.data.uuid);
         return true;
     },
     async logout({ commit }) {

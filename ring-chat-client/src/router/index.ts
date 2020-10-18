@@ -9,11 +9,17 @@ const routes: Array<RouteConfig> = [
     {
         path: '/login',
         component: Login,
+        meta: {
+            title: 'RingChat-Login'
+        }
     },
     {
         path: '/chat',
         name: 'Chat',
         component: Chat,
+        meta: {
+            title: 'RingChat-Chat'
+        }
     },
 ];
 
@@ -22,5 +28,10 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 });
+
+router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
+    next()
+})
 
 export default router;
