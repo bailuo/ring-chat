@@ -11,19 +11,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// status 0 暂时无人使用 1被占用
+// status 0 暂时无人使用 1被占用， 在用户登录后随机分配一个昵称
 const nickNameLibrary = [
     { nickname: '曹操', status: 0 },
     { nickname: '孙权', status: 0 },
     { nickname: '刘备', status: 0 },
     { nickname: '赵云', status: 0 },
     { nickname: '姜维', status: 0 },
+    { nickname: '曹冲', status: 0 },
+    { nickname: '诸葛瑾', status: 0 },
     { nickname: '祝融夫人', status: 0 },
+    { nickname: '孙尚香', status: 0 },
     { nickname: '虚竹', status: 0 },
     { nickname: '段誉', status: 0 },
     { nickname: '钟灵', status: 0 },
+    { nickname: '扁鹊', status: 0 },
     { nickname: '萧峰', status: 0 },
     { nickname: '赵云', status: 0 },
+    { nickname: '李元霸', status: 0 },
     { nickname: '张飞', status: 0 },
     { nickname: '黄忠', status: 0 },
     { nickname: '夏侯惇', status: 0 },
@@ -116,12 +121,12 @@ socketIO.on('connection', function (socket) {
     // 为了能够排序，我们为每条用户发送的信息做一个uuid，这个uuid目前最实际的一个场景是撤回信息的时候使用
     socket.on('chatMessage', function (messageRequest) {
         const { message } = messageRequest;
-        const date = new Date();
-        const dateInTime = date.getTime().toString();
+        const dateInTime = dayjs().format('YYYYMMMMDDHHmmssSSS').toString();
         let messageUUID;
         if (message.type === 'text') {
             messageUUID = (message.conent + dateInTime).hash();
         } else {
+            console.log({ ...message });
             messageUUID = dateInTime.hash();
         }
         const emitMessage = {
@@ -145,8 +150,7 @@ socketIO.on('connection', function (socket) {
     });
     socket.on('withdrawMessage', function (withdrawRequest) {
         const { user, messageId } = withdrawRequest;
-        const date = new Date();
-        const dateInTime = date.getTime().toString();
+        const dateInTime = dayjs().format('YYYYMMMMDDHHmmssSSS').toString();
         const sysMessageUUID = dateInTime.hash();
         const withdrawData = {
             messageId,

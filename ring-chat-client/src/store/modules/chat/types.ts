@@ -36,15 +36,3 @@ export interface ChatRoom {
     // 窗口是否是用户当前使用
     isRoomActive: boolean;
 }
-
-
-export interface ServerRes {
-    code: number;
-    msg: string;
-    data: any;
-}
-
-
-export interface SeverSystemRes {
-    message: string;
-}

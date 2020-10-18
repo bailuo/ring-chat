@@ -6,15 +6,3 @@ export interface User {
     token: string;
 }
 
-
-export interface ServerRes {
-    code: number;
-    msg: string;
-    data: any;
-}
-
-
-export interface SeverSystemRes {
-    message: string;
-}
-

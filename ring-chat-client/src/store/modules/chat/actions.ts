@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 import { ActionTree } from 'vuex';
 import { ChatState } from './state';
 import { RootState } from '../../index';
-import { ServerRes, SeverSystemRes } from './types';
 import {
     ADD_MESSAGE_TO_LIST,    
     SET_CHAT_SOCKET,

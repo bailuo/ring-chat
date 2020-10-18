@@ -1,5 +1,7 @@
+export {};
+declare global {
 // 聊天的每条
-export interface ChatMessage<T> {
+interface ChatMessage<T> {
     messageId: string;
     contentType: string;
     content: T;
@@ -9,14 +11,14 @@ export interface ChatMessage<T> {
 // TODO check if we can extend an interface,
 // TODO check diference between type and interface
 
-export interface SysMessage<T>{
+interface SysMessage<T>{
     createdTimeStamp: string;
     content: T;
 }
 
 
 // 聊天
-export interface ChatRoom {
+ interface ChatRoom {
     roomId: string;
     createdTimeStamp: string;
     // 窗口信息
@@ -26,22 +28,23 @@ export interface ChatRoom {
 }
 
 
-export interface ServerRes {
+interface ServerRes {
     code: number;
     msg: string;
     data: any;
 }
 
 
-export interface SeverSystemRes {
+interface SeverSystemRes {
     message: string;
 }
 
 
 
 // 图片尺寸
-export interface  ImageSize {
+interface  ImageSize {
     width: number;
     height: number;
 }
 
+}
