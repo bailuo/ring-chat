@@ -100,21 +100,6 @@
                     content: image.src,
                 });
             };
-            // const image = new Image();
-            // const url = window.URL || window.webkitURL;
-            // image.src = url.createObjectURL(imageFile);
-            // image.onload = () => {
-            //     const imageSize: ImageSize = this.getImageSize({
-            //         width: image.width,
-            //         height: image.height,
-            //     });
-            //     this.sendMessage({
-            //         type: 'image',
-            //         width: imageSize.width,
-            //         height: imageSize.height,
-            //         content: image.src,
-            //     });
-            // };
         }
         // 撤回信息
         async withdrawMessage(messageId: string) {
@@ -137,11 +122,13 @@
                 height,
             };
         }
-        // 邀请一个人进入聊天，显示系统信息
+        // TODO 邀请一个人进入聊天，显示系统信息
         async handleInviteContact() {
             this.inviteContactToChat();
         }
 
+        // 进入时先看有没有用户名，并做其他验证
+        // TODO 检查昵称，如果没有系统随机分配的，应该自己设置一个
         created() {
             if (!this.username) {
                 this.$router.replace('/login');
